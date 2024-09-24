@@ -1,6 +1,7 @@
 function onFormSubmit(e) {
-  var recipients = "mentoring@thrivingelements.org, sarah@thrivingelements.org, albert@thrivingelements.org"; // Add your recipients here
-  var formLink = "https://docs.google.com/forms/d/your-form-id/viewform"; // Link to your Google Form
+  /var recipients = "mentoring@thrivingelements.org, sarah@thrivingelements.org, albert@thrivingelements.org"; // Add your recipients here
+  // var recipients = "albert@thrivingelements.org"; // Add your recipients here
+  var formLink = "https://docs.google.com/forms/d/e/1FAIpQLScOCJegsGsz7tmbyBdPEA3ic-yLv9Zwqd3Q2pgnDro04lflkQ/viewform"; // Link to your Google Form
   var sheetLink = SpreadsheetApp.getActiveSpreadsheet().getUrl(); // Link to the Google Sheet
   
   try {
