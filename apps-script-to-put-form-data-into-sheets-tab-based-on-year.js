@@ -1,6 +1,7 @@
 function onFormSubmit(e) {
-  /var recipients = "mentoring@thrivingelements.org, sarah@thrivingelements.org, albert@thrivingelements.org"; // Add your recipients here
-  // var recipients = "albert@thrivingelements.org"; // Add your recipients here
+  // Define recipients for admin notification
+  // var recipients = "mentoring@thrivingelements.org, sarah@thrivingelements.org, albert@thrivingelements.org"; 
+  var recipients = "albert@thrivingelements.org"; 
   var formLink = "https://docs.google.com/forms/d/e/1FAIpQLScOCJegsGsz7tmbyBdPEA3ic-yLv9Zwqd3Q2pgnDro04lflkQ/viewform"; // Link to your Google Form
   var sheetLink = SpreadsheetApp.getActiveSpreadsheet().getUrl(); // Link to the Google Sheet
   
@@ -8,7 +9,10 @@ function onFormSubmit(e) {
     var sheet = e.source.getActiveSheet();
     var response = e.values;
 
-    // Adjust the index to 2 for the date question (3rd column in the sheet)
+    // Get the respondent's email (adjust index to match your form)
+    var emailAddress = response[1];  // Assuming the email is in the second column
+
+    // Get the date from the form (adjust index to match the form)
     var formDate = new Date(response[2]); 
     var year = formDate.getFullYear();
 
@@ -33,14 +37,32 @@ function onFormSubmit(e) {
       formResults += "Question " + (i + 1) + ": " + response[i] + "\n";
     }
 
-    // Send a success notification if the script completes successfully
-    var subject = "In-Development Mentor Form Submission Success";
-    var message = "The form submission was successfully processed for the year: " + year + ".\n\n" +
-                  "Form link: " + formLink + "\n" +
-                  "Sheet link: " + sheetLink + "\n\n" +
-                  "Form Results:\n" + formResults;
+    // Email to the admin team
+    var adminSubject = "TE Mentor Form Submission Success";
+    var adminMessage = "The form submission was successfully processed for the year: " + year + ".\n\n" +
+                       "Form link: " + formLink + "\n" +
+                       "Sheet link: " + sheetLink + "\n\n" +
+                       "Form Results:\n" + formResults;
 
-    MailApp.sendEmail(recipients, subject, message);
+    MailApp.sendEmail(recipients, adminSubject, adminMessage);
+
+    // Send thank-you email to respondent (if email exists)
+    if (emailAddress) {
+      var subject = "Thank you for your form submission";
+      var message = "Hello,\n\n" +
+                    "Thank you for submitting the form. Here are your responses:\n\n" +
+                    formResults +
+                    "\nWe appreciate your time and effort in filling out this form. If you have any questions, feel free to reach out to us.\n\n" +
+                    "Best regards,\nThriving Elements Mentoring Program";
+
+      MailApp.sendEmail({
+        to: emailAddress,
+        subject: subject,
+        body: message,
+        name: "Thriving Elements Mentoring Program",      // Custom From Name
+        replyTo: "mentoring@thrivingelements.org"         // Custom Reply-To email address
+      });
+    }
 
   } catch (error) {
     // Send a failure notification if there is an error
