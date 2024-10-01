@@ -1,8 +1,6 @@
-// This script puts the form submission data into a tab based on year. It also notifies admin team and the user.
-
 function onFormSubmit(e) {
   // Define recipients for admin notification
-  var recipients = "mentoring@thrivingelements.org, sarah@thrivingelements.org, albert@thrivingelements.org"; 
+  var recipients = "mentoring@thrivingelements.org, albert@thrivingelements.org"; 
 
   var formLink = "https://docs.google.com/forms/d/e/1FAIpQLScOCJegsGsz7tmbyBdPEA3ic-yLv9Zwqd3Q2pgnDro04lflkQ/viewform"; // Link to your Google Form
   var sheetLink = SpreadsheetApp.getActiveSpreadsheet().getUrl(); // Link to the Google Sheet
@@ -12,8 +10,9 @@ function onFormSubmit(e) {
     var response = e.values;
     var lastRow = sheet.getLastRow();  // Get the last row where the new form response was added
 
-    // Get the respondent's email (adjust index to match your form)
+    // Get the respondent's email and first name (adjust index to match your form)
     var emailAddress = response[1];  // Assuming the email is in the second column
+    var firstName = response[3];  // Assuming the first name is in the fourth column (D)
 
     // Get the date from the form (adjust index to match the form)
     var formDate = new Date(response[2]); 
@@ -50,7 +49,8 @@ function onFormSubmit(e) {
     var adminMessage = "The form submission was successfully processed for the year: " + year + ".\n\n" +
                        "Form link: " + formLink + "\n" +
                        "Sheet link: " + sheetLink + "\n\n" +
-                       "Form Results:\n" + formResults;
+                       "Form Results:\n" + formResults + "\n\n" +
+                       "First Name: " + firstName;
 
     MailApp.sendEmail({
       to: recipients,
@@ -66,6 +66,7 @@ function onFormSubmit(e) {
       
       // Construct the HTML email message
       var htmlMessage = `
+        <p>Dear ${firstName},</p>
         <p>Thank you for applying for the Thriving Elements STEM mentoring program!</p>
         <p>Our team is currently reviewing your application and we will notify you of the next steps soon. 
         You can learn more about the recruitment process on the 
