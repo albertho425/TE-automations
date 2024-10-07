@@ -8,7 +8,6 @@ function onFormSubmit(e) {
   try {
     var sheet = e.source.getActiveSheet();
     var response = e.values;
-    var lastRow = sheet.getLastRow();  // Get the last row where the new form response was added
 
     // Get the respondent's email and first name (adjust index to match your form)
     var emailAddress = response[1];  // Assuming the email is in the second column
@@ -21,14 +20,6 @@ function onFormSubmit(e) {
     // Get the active spreadsheet
     var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     
-    // Append response to the master tab (Mentor INPUT)
-    var masterSheet = spreadsheet.getSheetByName("Mentor INPUT");
-    if (!masterSheet) {
-      throw new Error("Master sheet 'Mentor INPUT' not found");
-    }
-    masterSheet.appendRow(response);  // Save to master tab
-    var masterLastRow = masterSheet.getLastRow();  // Get the last row in the master sheet
-
     // Check for the year tab, create if not found
     var yearSheet = spreadsheet.getSheetByName(year.toString());
     if (!yearSheet) {
@@ -57,7 +48,7 @@ function onFormSubmit(e) {
       subject: adminSubject,
       body: adminMessage,
       name: "Thriving Elements Mentoring Program",  // Custom From Name
-      replyTo: "mentoring@thrivingelements.org"    // Custom Reply-To email
+      replyTo: "mentoring@thrivingelements.org",    // Custom Reply-To email
     });
 
     // Send thank-you email to respondent (if email exists)
@@ -89,9 +80,6 @@ function onFormSubmit(e) {
         name: "Thriving Elements Mentoring Program",      // Custom From Name
         replyTo: "mentoring@thrivingelements.org"         // Custom Reply-To email address
       });
-
-      // After email is sent, add "Sent" to column AR of the corresponding row in the master sheet
-      masterSheet.getRange(masterLastRow, 44).setValue("Sent");
     }
 
   } catch (error) {
